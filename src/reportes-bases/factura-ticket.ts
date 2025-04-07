@@ -33,7 +33,7 @@ const style: StyleDictionary ={
 export const getFactura = ( options: ReportOptions) => {
   const { title, description,detallesFactura } = options
   const DetalleSeze = 9
-  console.log(detallesFactura);
+
   const docDefinition: TDocumentDefinitions = {
     pageSize: {
       width:277,
@@ -120,7 +120,7 @@ export const getFactura = ( options: ReportOptions) => {
         },
       },
       '\n\n',
-      { text:'=============',style:'body',alignment:'right'},
+
       
       // totales
       
@@ -143,6 +143,10 @@ export const getFactura = ( options: ReportOptions) => {
                 [
                   { text: 'Descuento',style:'body'},
                   { text: CurrencyFormater.format('GTQ',detallesFactura[0].TOTA_DESCUENTO),style:'body', alignment:"right"},
+                ],
+                [
+                  { text:'',style:'body', alignment:"right"},
+                  { text: '_________________',style:'body'},
                 ],
                 [
                   { text: 'Total',style:'body', bold:true},

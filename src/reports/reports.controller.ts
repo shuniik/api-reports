@@ -24,6 +24,20 @@ export class ReportsController {
     pdfDoc.pipe(response);
     pdfDoc.end();
   }
+  @Get('kardex')
+  async valorizado(
+    @Res() response: Response,
+
+  ) {
+    
+
+    const pdfDoc = await this.reportsService.getKardex(1, '10001')
+
+    response.setHeader('Content-Type', 'application/pdf');
+    pdfDoc.info.Title='Kardex de producto';
+    pdfDoc.pipe(response);
+    pdfDoc.end();
+  }
 
 
 }
