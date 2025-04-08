@@ -5,6 +5,7 @@ import { DetalleFactura } from "./interfaces/factura-det";
 import { footerSection } from "./sections/footer.section";
 
 import { headerCartaSections } from "./sections/header.carta.section";
+import { KardexProducto } from "./interfaces/kardex-producto";
 
 
 interface ReportOptions {

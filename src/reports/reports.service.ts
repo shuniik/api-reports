@@ -5,12 +5,9 @@ import { PrinterService } from 'src/printer/printer.service';
 import { getFactura } from 'src/reportes-bases';
 import { DataSource } from 'typeorm';
 
+
+import { getValorizado } from 'src/reportes-bases/valorizado';
 import { getKardexProducto } from 'src/reportes-bases/kardex';
-
-
-
-
-
 
 @Injectable()
 export class ReportsService {
@@ -22,10 +19,11 @@ export class ReportsService {
   }
   async factura(serie: string, numero: number) {
     const producto= await this.dataSource.query(`select * 
-            from VFEL_producto_ENC_DET 
+            from VFEL_FACTURAS_ENC_DET 
             where SERIE='${serie}' 
             and NUMERO_FACTURA=${numero}`)
 
+            
     if( !producto || producto.length===0 ){
       throw new NotFoundException(`No existe la factura con serie: ${serie} - y numero: ${numero}`)
     }
@@ -55,6 +53,19 @@ export class ReportsService {
     }
 
     const docDefinition = getKardexProducto({ title:'REPORTE DE KARDEX', description:kardex[0].DESCRIPCION_CORTA, kardexProducto:kardex })
+
+    const doc = this.printerService.createPdf(docDefinition) 
+    return doc
+  }
+  async valorizado( bodega: number ) {
+    const valor= await this.dataSource.query(`SELECT * FROM VALORIZADO_BODEGAS
+            where CODIGO_BODEGA=${bodega}`)
+
+    if( !valor || valor.length===0 ){
+      throw new NotFoundException(`No se encontró movimientos para el producto`)
+    }
+
+    const docDefinition = getValorizado({description:  valor[0].DESCRIPCION_CORTA +', CÓDIGO: '+ valor[0].PRODUCT0 ,title:'VALORIZADO DE BODEGA',valorizadoDet:valor})
 
     const doc = this.printerService.createPdf(docDefinition) 
     return doc

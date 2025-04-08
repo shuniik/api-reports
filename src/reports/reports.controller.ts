@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Res } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Res, Query } from '@nestjs/common';
 import { ReportsService } from './reports.service';
 
 import { Response } from 'express';
@@ -9,14 +9,13 @@ export class ReportsController {
     private readonly reportsService: ReportsService
   ) {}
 
-  @Get('factura/:serie/:numero')
-  async facturaTickets(
+  @Get('factura')
+  async facturasTickets(
     @Res() response: Response,
-    @Param('serie') serie: string,
-    @Param('numero') numero: string
+    @Query('serie') serie: string,
+    @Query('numero') numero: number
   ) {
-    
-    // console.log(` serie: ${serie} y num factura: ${numero} `);
+     console.log(` serie: ${serie} y num factura: ${numero} `);
     const pdfDoc = await this.reportsService.factura( serie,+numero);
 
     response.setHeader('Content-Type', 'application/pdf');
@@ -24,17 +23,27 @@ export class ReportsController {
     pdfDoc.pipe(response);
     pdfDoc.end();
   }
+
   @Get('kardex')
-  async valorizado(
+  async kardex(
     @Res() response: Response,
-
   ) {
-    
-
     const pdfDoc = await this.reportsService.getKardex(1, '10001')
 
     response.setHeader('Content-Type', 'application/pdf');
     pdfDoc.info.Title='Kardex de producto';
+    pdfDoc.pipe(response);
+    pdfDoc.end();
+  }
+  @Get('valorizado')
+  async valorizado(
+    @Res() response: Response,
+    @Param('bodega') bodega: number
+  ) {
+    const pdfDoc = await this.reportsService.valorizado(bodega)
+
+    response.setHeader('Content-Type', 'application/pdf');
+    pdfDoc.info.Title='Valorizado por bodega';
     pdfDoc.pipe(response);
     pdfDoc.end();
   }

@@ -13,4 +13,12 @@ export class DateFormater {
       return this.formatter.format(date);  
     }
 
+    static getMonthYear(date: Date | string): string {
+      if (!date) return '';
+      const d = new Date(date);
+      const month = `${d.getMonth() + 1}`.padStart(2, '0'); 
+      const year = d.getFullYear();
+      return `${month}/${year}`;
+    }
+
   }

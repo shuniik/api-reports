@@ -1,4 +1,4 @@
-interface KardexProducto {
+export interface KardexProducto {
   CODIGO_SUCURSAL: string;
   CODIGO_BODEGA: string;
   CODIGO_MOV_INVE: string;
