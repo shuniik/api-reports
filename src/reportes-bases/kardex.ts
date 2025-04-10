@@ -6,6 +6,7 @@ import { footerSection } from "./sections/footer.section";
 
 import { headerCartaSections } from "./sections/header.carta.section";
 import { KardexProducto } from "./interfaces/kardex-producto";
+import { NumberFormater } from "src/helpers/number-formater";
 
 
 interface ReportOptions {
@@ -22,7 +23,7 @@ const style: StyleDictionary ={
   },
   body:{
     fontSize:10,
-    alignment:'justify'
+    alignment:'center'
   },
   footer:{
     fontSize:10,
@@ -39,7 +40,10 @@ export const getKardexProducto = ( options: ReportOptions) => {
   const DetalleSeze = 9
 
   const totalCantidadMovimiento = kardexProducto.reduce((acc, item) => acc + Number(item.CANTIDAD_MOVIMIENTO || 0), 0);
-
+  
+  const sortedKardex = [...kardexProducto].sort((a, b) => {
+    return new Date(a.FECHA_DOCUMENTO).getTime() - new Date(b.FECHA_DOCUMENTO).getTime();
+  });
   const docDefinition: TDocumentDefinitions = {
     styles:style,
     pageOrientation:"landscape",
@@ -83,7 +87,7 @@ export const getKardexProducto = ( options: ReportOptions) => {
               { text: 'LOTE',style:'body'},
               { text: 'CANT MOV',style:'body'},
             ], 
-              ...kardexProducto.map( detalle =>  [
+              ...sortedKardex.map( detalle =>  [
                   { text: detalle.CODIGO_MOV_INVE, fontSize:DetalleSeze,alignment:"center" },
                   { text: detalle.DESCRIP_MOV_INVENTARIO,alignment:"justify",fontSize:DetalleSeze},
                   { text: detalle.NUMERO_MOVIMIENTO,alignment:"justify",fontSize:DetalleSeze},
@@ -93,13 +97,13 @@ export const getKardexProducto = ( options: ReportOptions) => {
                   { text: DateFormater.getDate( detalle.FECHA_DOCUMENTO),alignment:"justify",fontSize:DetalleSeze},
                   { text: detalle.PRODUCT0,alignment:"justify",fontSize:DetalleSeze},
                   { text: detalle.CODIGO_LOTE,alignment:"justify",fontSize:DetalleSeze},
-                  { text: detalle.CANTIDAD_MOVIMIENTO,alignment:"right",fontSize:DetalleSeze}
+                  { text: NumberFormater.withCommas( detalle.CANTIDAD_MOVIMIENTO),alignment:"center",fontSize:DetalleSeze}
                 ]
               ),
               [
                 { text: '', colSpan: 9, border: [false, true, false, true] }, '', '', '', '', '', '', '', '',
                 { 
-                  text: `TOTAL: ${totalCantidadMovimiento}`, 
+                  text: `Su existencia debería ser: ${ NumberFormater.withCommas( totalCantidadMovimiento)}` , 
                   bold: true, 
                   fontSize: 11, 
                   alignment: 'center',

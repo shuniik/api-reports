@@ -23,7 +23,7 @@ export class ReportsService {
             where SERIE='${serie}' 
             and NUMERO_FACTURA=${numero}`)
 
-            
+
     if( !producto || producto.length===0 ){
       throw new NotFoundException(`No existe la factura con serie: ${serie} - y numero: ${numero}`)
     }
@@ -65,7 +65,7 @@ export class ReportsService {
       throw new NotFoundException(`No se encontró movimientos para el producto`)
     }
 
-    const docDefinition = getValorizado({description:  valor[0].DESCRIPCION_CORTA +', CÓDIGO: '+ valor[0].PRODUCT0 ,title:'VALORIZADO DE BODEGA',valorizadoDet:valor})
+    const docDefinition = getValorizado({description: '' ,title:'VALORIZADO',valorizadoDet:valor})
 
     const doc = this.printerService.createPdf(docDefinition) 
     return doc

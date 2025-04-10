@@ -27,8 +27,10 @@ export class ReportsController {
   @Get('kardex')
   async kardex(
     @Res() response: Response,
+    @Query('bodega') bodega: number,
+    @Query('producto') producto: string
   ) {
-    const pdfDoc = await this.reportsService.getKardex(1, '10001')
+    const pdfDoc = await this.reportsService.getKardex(bodega, producto)
 
     response.setHeader('Content-Type', 'application/pdf');
     pdfDoc.info.Title='Kardex de producto';
@@ -38,7 +40,7 @@ export class ReportsController {
   @Get('valorizado')
   async valorizado(
     @Res() response: Response,
-    @Param('bodega') bodega: number
+    @Query('bodega') bodega: number
   ) {
     const pdfDoc = await this.reportsService.valorizado(bodega)
 
@@ -47,6 +49,4 @@ export class ReportsController {
     pdfDoc.pipe(response);
     pdfDoc.end();
   }
-
-
 }
