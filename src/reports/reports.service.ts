@@ -17,11 +17,16 @@ export class ReportsService {
   ) {
 
   }
-  async factura(serie: string, numero: number) {
+  async factura(codigo_sucursal:number,serie: string, numero: number) {
     const producto= await this.dataSource.query(`select * 
             from VFEL_FACTURAS_ENC_DET 
-            where SERIE='${serie}' 
-            and NUMERO_FACTURA=${numero}`)
+            where   CODIGO_SUCURSAL = @0 
+            And     NUMERO_FACTURA  = @1
+            And     SERIE           = @2`,[
+              codigo_sucursal,
+              numero,
+              serie
+            ])
 
 
     if( !producto || producto.length===0 ){

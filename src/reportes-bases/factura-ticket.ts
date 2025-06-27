@@ -11,23 +11,43 @@ interface ReportOptions {
   detallesFactura: DetalleFactura[]
 }
 
-const style: StyleDictionary ={
-  header:{
-    fontSize:10,
-    alignment:'center',
-
+const style: StyleDictionary = {
+  header: {
+    fontSize: 10,
+    alignment: 'center',
+    bold: true,
+    margin: [0, 2, 0, 2]
   },
-  body:{
-    fontSize:10,
-    alignment:'justify'
+  subheader: {
+    fontSize: 9,
+    alignment: 'center',
+    margin: [0, 1, 0, 1]
   },
-  footer:{
-    fontSize:10,
-    italics:true,
-    alignment:'center',
-    margin:[0,20,0,0]
+  body: {
+    fontSize: 9,
+    alignment: 'justify'
+  },
+  footer: {
+    fontSize: 9,
+    italics: true,
+    alignment: 'center',
+    margin: [0, 20, 0, 0]
+  },
+  totalLabel: {
+    fontSize: 9,
+    bold: true
+  },
+  totalValue: {
+    fontSize: 9,
+    bold: true,
+    alignment: 'right'
+  },
+  divider: {
+    fontSize: 9,
+    alignment: 'center',
+    margin: [0, 5, 0, 5],
+    decoration: 'underline'
   }
-  
 }
 
 export const getFactura = ( options: ReportOptions) => {
@@ -37,25 +57,19 @@ export const getFactura = ( options: ReportOptions) => {
   const docDefinition: TDocumentDefinitions = {
     pageSize: {
       width:277,
-      height:500
+       height:500
       // height:'auto'
     },
     styles:style,
     header: headerSections({
       showDate: true,
-      showLogo: true,
-      StoreName:'TIENDA AMORE',
+      showLogo: false,
+      StoreName:'TICKET ',
     }),
     // footer: footerSection,
     pageMargins:[5,70,20,30],
     
     content: [
-     
-      // {
-      //   qr:'https://google.com',
-      //   fit:100,
-      //   alignment:'center',
-      // },
       {
 
         text:'----------- DATOS DEL COMPROBANTE -----------',
@@ -65,65 +79,56 @@ export const getFactura = ( options: ReportOptions) => {
         text:`Fecha documento: ${ DateFormater.getDate( detallesFactura[0].FECHA_DE_FACTURA)}`,
         style:'header',
       },
-      {
-        text:`Ticket No. ${detallesFactura[0].NUMERO_FACTURA} | ${detallesFactura[0].SERIE} `,
-        style:'header',
-      },
-      {
-        text:`Vendedor: ${detallesFactura[0].NOMBRE_USUARIO}`,
-        style:'header',
-      },
-      {
 
-        text:'----------- DATOS DEL COMPRADOR -----------',
-        style:'header'
+      {
+        text: `Ticket No. ${detallesFactura[0].NUMERO_FACTURA} | ${detallesFactura[0].SERIE}`,
+        style: 'subheader'
       },
       {
-
-        text:`NIT: ${detallesFactura[0].NIT_CLIENTE_FACTURAR}`,
-        style:'header',
+        text: `Vendedor: ${detallesFactura[0].NOMBRE_USUARIO}`,
+        style: 'subheader'
       },
       {
-        text:`Nombre: ${detallesFactura[0].NOMBRE_CLIENTE_FACTURAR}`,
-        style:'header',
+        text: '-----DATOS DEL COMPRADOR-----',
+        style: 'subheader'
       },
       {
-        text:`Dirección: ${detallesFactura[0].DIRECCION_CLIENTE_FACTURAR}`,
-        style:'header',
+        text: `NIT: ${detallesFactura[0].NIT_CLIENTE_FACTURAR}`,
+        style: 'subheader'
       },
-      
       {
-       
-        
-        margin:[0,10,0,0],
-
-        // layout:'headerLineOnly',
-        layout:'lightHorizontalLines',
-        
-        table:{
-          headerRows:1,
-          // widths:['auto','auto','auto','10'],
-          body:[
-            [ 
-              { text: 'CANT',style:'body'}, 
-              { text: 'DESCRIPCIÓN',style:'body'}, 
-              { text: 'PRECIO',style:'body'}, 
-              { text: 'SUBT.',style:'body'}], 
-              ...detallesFactura.map( detalle =>  [
-                  { text: detalle.CANTIDAD_FACTURADA, fontSize:DetalleSeze,alignment:"center" },
-                  { text: detalle.DESCRIPCION_LARGA,alignment:"justify",fontSize:DetalleSeze},
-                  { text: CurrencyFormater.format('GTQ', +detalle.PRECIO_FINAL),fontSize:DetalleSeze},
-                  { text: CurrencyFormater.format('GTQ', +detalle.TOTAL),fontSize:DetalleSeze}
-                ]
-              )  
-          ],
-        },
+        text: `Nombre: ${detallesFactura[0].NOMBRE_CLIENTE_FACTURAR}`,
+        style: 'subheader'
       },
-      '\n\n',
-
-      
-      // totales
-      
+      {
+        text: `Dirección: ${detallesFactura[0].DIRECCION_CLIENTE_FACTURAR}`,
+        style: 'subheader'
+      },
+      {
+        text: 'DETALLE DE COMPRA',
+        style: 'divider'
+      },
+      {
+        margin: [0, 5, 0, 10],
+        table: {
+          headerRows: 1,
+          widths: ['15%', '40%', '20%', '25%'],
+          body: [
+            [
+              { text: 'CANT', style: 'body', bold: true, fillColor: '#f0f0f0' },
+              { text: 'DESCRIPCIÓN', style: 'body', bold: true, fillColor: '#f0f0f0' },
+              { text: 'PRECIO', style: 'body', bold: true, fillColor: '#f0f0f0' },
+              { text: 'SUBT.', style: 'body', bold: true, fillColor: '#f0f0f0' }
+            ],
+            ...detallesFactura.map(detalle => [
+              { text: detalle.CANTIDAD_FACTURADA, fontSize: DetalleSeze, alignment: "center" },
+              { text: detalle.DESCRIPCION_LARGA, alignment: "justify", fontSize: DetalleSeze },
+              { text: CurrencyFormater.format('GTQ', +detalle.PRECIO_FINAL), fontSize: DetalleSeze, alignment: "right" },
+              { text: CurrencyFormater.format('GTQ', +detalle.TOTAL), fontSize: DetalleSeze, alignment: "right" }
+            ])
+          ]
+        }
+      },
       {
         
         columns:[
@@ -154,18 +159,24 @@ export const getFactura = ( options: ReportOptions) => {
                 ],
               ]
             }
-          },
+          }
         ]
+      },
+      {
+        text: '¡Gracias por su compra!',
+        style: 'footer',
+        margin: [0, 20, 0, 0]
       }
     ],
 
   
     
-    footer: {
+    footer:[{
       text:'Esperamos que vuelva!!',
       alignment:"center",
       style:'body'
-    }
+    },
+  ]
   }
  return docDefinition
 };

@@ -13,10 +13,11 @@ export class ReportsController {
   async facturasTickets(
     @Res() response: Response,
     @Query('serie') serie: string,
-    @Query('numero') numero: number
+    @Query('numero') numero: number,
+    @Query('sucursal') sucursal: number
   ) {
      console.log(` serie: ${serie} y num factura: ${numero} `);
-    const pdfDoc = await this.reportsService.factura( serie,+numero);
+    const pdfDoc = await this.reportsService.factura(sucursal ,serie,+numero);
 
     response.setHeader('Content-Type', 'application/pdf');
     pdfDoc.info.Title='Comprobante de compra';
