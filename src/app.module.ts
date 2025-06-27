@@ -19,10 +19,11 @@ import { PrinterModule } from './printer/printer.module';
       database: 'LIBREARIA_DEV',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: false,
-      options: {
-        encrypt: true, // Importante si usas Azure
+      extra: {
+        encrypt: true,
         trustServerCertificate: false,
-      },
+        ssl: process.env.STAGE === 'prod' ? { rejectUnauthorized: false } : null,
+      }
     }),
 
     ReportsModule,
