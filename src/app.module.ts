@@ -12,11 +12,11 @@ import { PrinterModule } from './printer/printer.module';
 
     TypeOrmModule.forRoot({
       type: 'mssql',
-      host: 'myazuresema.database.windows.net',
-      port: 1433, 
-      username:'devDB',
-      password: 'coderDev2025',
-      database: 'LIBREARIA_DEV',
+      host: process.env.DB_HOST,
+      port: +(process.env.DB_PORT || '1433'),
+      username: process.env.DB_USERNAME,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME,
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: false,
       extra: {
@@ -28,9 +28,9 @@ import { PrinterModule } from './printer/printer.module';
 
     ReportsModule,
 
-    PrinterModule, 
+    PrinterModule,
   ],
   controllers: [],
   providers: [],
 })
-export class AppModule {}
+export class AppModule { }
