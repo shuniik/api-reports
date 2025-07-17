@@ -50,34 +50,34 @@ const style: StyleDictionary = {
   }
 }
 
-export const getFactura = ( options: ReportOptions) => {
-  const { title, description,detallesFactura } = options
+export const getFactura = (options: ReportOptions) => {
+  const { title, description, detallesFactura } = options
   const DetalleSeze = 9
 
   const docDefinition: TDocumentDefinitions = {
     pageSize: {
-      width:277,
-       height:500
-      // height:'auto'
+      width: 277,
+      // height:500
+      height: 10000
     },
-    styles:style,
+    styles: style,
     header: headerSections({
       showDate: true,
       showLogo: false,
-      StoreName:'TICKET ',
+      StoreName: 'TICKET ',
     }),
     // footer: footerSection,
-    pageMargins:[5,70,20,30],
-    
+    pageMargins: [5, 70, 20, 30],
+
     content: [
       {
 
-        text:'----------- DATOS DEL COMPROBANTE -----------',
-        style:'header'
+        text: '----------- DATOS DEL COMPROBANTE -----------',
+        style: 'header'
       },
       {
-        text:`Fecha documento: ${ DateFormater.getDate( detallesFactura[0].FECHA_DE_FACTURA)}`,
-        style:'header',
+        text: `Fecha documento: ${DateFormater.getDate(detallesFactura[0].FECHA_DE_FACTURA)}`,
+        style: 'header',
       },
 
       {
@@ -130,32 +130,33 @@ export const getFactura = ( options: ReportOptions) => {
         }
       },
       {
-        
-        columns:[
-          { width:'*',
-            text:''
+
+        columns: [
+          {
+            width: '*',
+            text: ''
           },
-          { 
-            width:'auto',
-            layout:'noBorders',
-            table:{
-              body:[
-               
+          {
+            width: 'auto',
+            layout: 'noBorders',
+            table: {
+              body: [
+
                 [
-                  { text: 'Subtotal',style:'body'},
-                  { text: CurrencyFormater.format('GTQ',detallesFactura[0].TOTAL_GENERAL + detallesFactura[0].TOTA_DESCUENTO),style:'body', alignment:"right"},
+                  { text: 'Subtotal', style: 'body' },
+                  { text: CurrencyFormater.format('GTQ', detallesFactura[0].TOTAL_GENERAL + detallesFactura[0].TOTA_DESCUENTO), style: 'body', alignment: "right" },
                 ],
                 [
-                  { text: 'Descuento',style:'body'},
-                  { text: CurrencyFormater.format('GTQ',detallesFactura[0].TOTA_DESCUENTO),style:'body', alignment:"right"},
+                  { text: 'Descuento', style: 'body' },
+                  { text: CurrencyFormater.format('GTQ', detallesFactura[0].TOTA_DESCUENTO), style: 'body', alignment: "right" },
                 ],
                 [
-                  { text:'',style:'body', alignment:"right"},
-                  { text: '_________________',style:'body'},
+                  { text: '', style: 'body', alignment: "right" },
+                  { text: '_________________', style: 'body' },
                 ],
                 [
-                  { text: 'Total',style:'body', bold:true},
-                  { text: CurrencyFormater.format('GTQ',detallesFactura[0].TOTAL_GENERAL),style:'body', alignment:"right", bold:true},
+                  { text: 'Total', style: 'body', bold: true },
+                  { text: CurrencyFormater.format('GTQ', detallesFactura[0].TOTAL_GENERAL), style: 'body', alignment: "right", bold: true },
                 ],
               ]
             }
@@ -169,14 +170,14 @@ export const getFactura = ( options: ReportOptions) => {
       }
     ],
 
-  
-    
-    footer:[{
-      text:'Esperamos que vuelva!!',
-      alignment:"center",
-      style:'body'
-    },
-  ]
+
+
+    // footer: [{
+    //   text: 'Esperamos que vuelva!!',
+    //   alignment: "center",
+    //   style: 'body'
+    // },
+    // ]
   }
- return docDefinition
+  return docDefinition
 };
